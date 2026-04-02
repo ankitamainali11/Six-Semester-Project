@@ -1,0 +1,7 @@
+backend/.env
+frontend/.env
+frontend/dist
+/node_modules/mongodb-binaries/
+node_modules/
+mongodb-binaries/
+.env
