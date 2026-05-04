@@ -1,0 +1,75 @@
+// Euclidean Distance (STANDARD for KNN)
+
+function euclideanDistance(vecA, vecB) {
+
+  let sum = 0;
+ 
+  for (let i = 0; i < vecA.length; i++) {
+
+    sum += Math.pow(vecA[i] - vecB[i], 2);
+
+  }
+ 
+  return Math.sqrt(sum);
+
+}
+ 
+// PURE KNN
+
+async function recommendKNN(user, opportunities, k = 5) {
+
+  const normalize = (t) => (t || "").toLowerCase().trim();
+ 
+  // Step 1: Build vocabulary
+
+  let vocabSet = new Set();
+ 
+  (user.interests || []).forEach(tag => vocabSet.add(normalize(tag)));
+
+  opportunities.forEach(op => {
+
+    (op.tags || []).forEach(tag => vocabSet.add(normalize(tag)));
+
+  });
+ 
+  const vocab = Array.from(vocabSet);
+ 
+  // Step 2: Convert to binary vectors (NO TF-IDF, NO WEIGHTS)
+
+  function buildVector(tags) {
+
+    const tagSet = new Set((tags || []).map(normalize));
+
+    return vocab.map(word => (tagSet.has(word) ? 1 : 0));
+
+  }
+ 
+  const userVector = buildVector(user.interests);
+ 
+  // Step 3: Compute distance (NOT similarity)
+
+  const distances = opportunities.map(op => {
+
+    const opVector = buildVector(op.tags); // <-- FIXED typo here
+
+    const distance = euclideanDistance(userVector, opVector);
+ 
+    const base = typeof op?.toObject === "function" ? op.toObject() : op;
+ 
+    return { ...base, distance };
+
+  });
+ 
+  // Step 4: Sort by smallest distance (nearest neighbors)
+
+  distances.sort((a, b) => a.distance - b.distance);
+ 
+  // Step 5: Return top K nearest
+
+  return distances.slice(0, k);
+
+}
+ 
+module.exports = { recommendKNN };
+
+ 

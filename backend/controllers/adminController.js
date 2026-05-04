@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Opportunity = require('../models/Opportunity');
+const { validatePasswordStrength, passwordPolicyMessage } = require('../utils/passwordUtils');
 
 // User management
 exports.listUsers = async (req, res) => {
@@ -62,6 +63,10 @@ exports.createUser = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
+    }
+
+    if (!validatePasswordStrength(password)) {
+      return res.status(400).json({ message: passwordPolicyMessage });
     }
 
     // Hash password

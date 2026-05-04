@@ -44,7 +44,7 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'ankitamainli11@gmail.com',
+      details: 'VolunterSystem@gmail.com',
       description: 'Send us an email and we\'ll respond within 24 hours'
     },
     {

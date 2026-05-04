@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require ('jsonwebtoken');
 const User = require ('../models/User');
+const { validatePasswordStrength, passwordPolicyMessage } = require('../utils/passwordUtils');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
@@ -19,6 +20,14 @@ exports.registerUser = async (req, res) => {
 
         if (role === 'organization' && !email.endsWith('.org')) {
             return res.status(400).json({ message: 'Organizations must register with a .org email address' });
+        }
+
+        if (!password) {
+            return res.status(400).json({ message: 'Password is required' });
+        }
+
+        if (!validatePasswordStrength(password)) {
+            return res.status(400).json({ message: passwordPolicyMessage });
         }
 
         const salt = await bcrypt.genSalt(10);

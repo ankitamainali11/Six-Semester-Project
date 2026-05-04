@@ -1,7 +1,7 @@
 const Opportunity = require('../models/Opportunity');
 const User = require('../models/User');
 const Tag = require('../models/Tag'); // Added Tag model import
-const {recommendCosineBased} = require('../utils/recommendCosine');
+const {recommendKNN} = require('../utils/recommendKNN');
 const sendEmail = require('../utils/sendEmail');
 
 exports.createOpportunity = async (req, res)=>{

@@ -9,6 +9,7 @@ const UserFormModal = ({ onClose, onSubmit, title, initialData = null }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (initialData) {
@@ -33,6 +34,27 @@ const UserFormModal = ({ onClose, onSubmit, title, initialData = null }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setErrors({});
+
+    const newErrors = {};
+    if (!formData.name) {
+      newErrors.name = 'Name is required';
+    }
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    }
+    if (!formData.password && !initialData) {
+      newErrors.password = 'Password is required';
+    }
+    if (formData.password && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(formData.password)) {
+      newErrors.password = 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
 
     try {
       const submitData = { ...formData };
@@ -106,6 +128,9 @@ const UserFormModal = ({ onClose, onSubmit, title, initialData = null }) => {
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={initialData ? "Leave empty to keep current password" : ""}
               />
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
 
             <div>

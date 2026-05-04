@@ -3,6 +3,7 @@ import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import TagSelector from '../components/TagSelector';
+import { isStrongPassword, passwordPolicyMessage } from '../utils/passwordUtils.js';
 
 const SignUpPage = () => {
   const { register, isAuthenticated, user } = useAuth();
@@ -44,8 +45,8 @@ const SignUpPage = () => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (!isStrongPassword(formData.password)) {
+      newErrors.password = passwordPolicyMessage;
     }
 
     if (!formData.confirmPassword) {

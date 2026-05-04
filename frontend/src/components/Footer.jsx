@@ -72,7 +72,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-indigo-400" />
-                <span className="text-gray-300 text-sm">ankitamainli11@gmail.com</span>
+                <span className="text-gray-300 text-sm">VolunterSystem@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-indigo-400" />
@@ -88,7 +88,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
-            © 2025 VolunteerMe. All rights reserved.
+            © 2026 VolunteerMe. All rights reserved.
           </p>
         </div>
       </div>

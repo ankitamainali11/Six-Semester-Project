@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.jsx';
+import { isStrongPassword, passwordPolicyMessage } from '../utils/passwordUtils.js';
 
 const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
   const { login, register } = useAuth();
@@ -40,8 +41,8 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login' }) => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (!isStrongPassword(formData.password)) {
+      newErrors.password = passwordPolicyMessage;
     }
 
     if (!isLogin) {
