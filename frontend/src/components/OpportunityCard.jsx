@@ -22,6 +22,8 @@ const OpportunityCard = ({ opportunity, onApply, hasApplied = false, isApplying 
     imageUrl
   } = opportunity;
 
+  const isExpired = endDate ? new Date(endDate) < new Date() : false;
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -200,13 +202,15 @@ const OpportunityCard = ({ opportunity, onApply, hasApplied = false, isApplying 
 
         {/* Action Button */}
         <button
-          onClick={(e) => { e.stopPropagation(); onApply(opportunity._id); }}
-          disabled={hasApplied || isApplying}
+          onClick={(e) => { e.stopPropagation(); if (!isExpired) onApply(opportunity._id); }}
+          disabled={hasApplied || isApplying || isExpired}
           className={`w-full py-3 px-4 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center justify-center gap-2 ${
             hasApplied
               ? 'bg-green-600 text-white cursor-not-allowed'
               : isApplying
               ? 'bg-indigo-400 text-white cursor-not-allowed'
+              : isExpired
+              ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
               : 'bg-indigo-600 text-white hover:bg-indigo-700'
           }`}
         >
@@ -217,6 +221,8 @@ const OpportunityCard = ({ opportunity, onApply, hasApplied = false, isApplying 
             </>
           ) : isApplying ? (
             'Applying...'
+          ) : isExpired ? (
+            'Expired'
           ) : (
             'Apply Now'
           )}

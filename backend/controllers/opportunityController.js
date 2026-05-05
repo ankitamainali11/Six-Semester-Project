@@ -202,6 +202,12 @@ exports.applyToOpportunity = async (req,res)=>{
         if(!opportunity){
             return res.status(404).json({message: 'Opportunity not found'});
         }
+
+        const now = new Date();
+        if (opportunity.endDate && new Date(opportunity.endDate) < now) {
+            return res.status(400).json({ message: 'Cannot apply to an opportunity that already ended' });
+        }
+
         if(opportunity.applicants.includes(req.user._id)){
             return res.status(400).json({message:'You may have already applied'});
         }

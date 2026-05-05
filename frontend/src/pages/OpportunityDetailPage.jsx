@@ -87,6 +87,11 @@ const OpportunityDetailPage = () => {
       return;
     }
 
+    if (isExpired) {
+      setModal({ open: true, type: 'warning', title: 'Opportunity expired', message: 'This opportunity has already ended and cannot be applied to.', onClose: () => setModal(m => ({ ...m, open: false })) });
+      return;
+    }
+
     if (hasApplied) {
       return; // Already applied, button should be disabled
     }
@@ -113,6 +118,8 @@ const OpportunityDetailPage = () => {
       day: 'numeric'
     });
   };
+
+  const isExpired = opportunity?.endDate ? new Date(opportunity.endDate) < new Date() : false;
 
   if (isLoading) {
     return <LoadingSpinner size="xl" className="py-20" />;
@@ -161,6 +168,11 @@ const OpportunityDetailPage = () => {
                   </span>
                 )}
               </div>
+              {isExpired && (
+                <div className="mt-4 inline-flex items-center rounded-full bg-red-100 text-red-700 px-3 py-1 text-sm font-medium">
+                  This opportunity has expired and is no longer accepting applications.
+                </div>
+              )}
             </div>
             
 
@@ -201,7 +213,7 @@ const OpportunityDetailPage = () => {
           </div>
 
           {/* Apply Button */}
-          {isAuthenticated && (user?.role === 'volunteer' || user?.role === 'admin') && (
+          {!isExpired && isAuthenticated && (user?.role === 'volunteer' || user?.role === 'admin') && (
             <div className="flex justify-center">
               <button
                 onClick={handleApply}
